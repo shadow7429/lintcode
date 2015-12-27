@@ -1,0 +1,28 @@
+// http://www.lintcode.com/en/problem/binary-tree-maximum-path-sum/
+
+
+/*
+这道题用一个全局变量来存储最后的res，helper函数是用来返回对于每一个节点来说，左分支加上自身的值和右分支加上自身的值中
+较大的。需要注意的是如下代码中标注的部分，因为分支可能是负值，这个时候单独的这个节点的值是最大的，因此此时res应该等于
+该节点的值。
+*/
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: An integer.
+     */
+    private int res = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode root) {
+        // write your code here
+        helper(root);
+        return res;
+    }
+    public int helper(TreeNode node){
+        if (node == null) return 0;
+        int left = helper(node.left);
+        int right = helper(node.right);
+        int resTmp = Math.max(left, right) + node.val;
+        res = Math.max(Math.max(res, left + right + node.val), node.val);       // --------------------（1）
+        return resTmp;
+    }
+}
