@@ -1,0 +1,33 @@
+// http://www.lintcode.com/en/problem/find-minimum-in-rotated-sorted-array-ii/
+
+/*
+这道题的思路其实就是找一个数（并且有序），所以当然可以用binary search。
+(1) 如果当前num[low] < num[hi]就说明本身这个序列就是排序的，没有进行rotate，所以直接返回num[low];
+(2) 否则，说明进行rotate了，那么对于中间值num[mid]，可能属于左边也可能属于右边，那么通过将num[mid]和num[low]进行比较：
+    [a] 如果num[mid] == num[low]并无法判断属于哪边，所以对左右都进行binary search，并且取结果的较小值。
+    [b] 如果num[mid] > num[low]说明要找的值在右边，所以对右边进行binary search
+    [c] 如果num[mid] < num[low]说明要找的值在左边，所以对左边进行binary search
+*/
+public class Solution {
+    /**
+     * @param num: a rotated sorted array
+     * @return: the minimum number in the array
+     */
+    public int findMin(int[] num) {
+        // write your code here
+        if (num == null || num.length == 0) return 0;
+        return helper(num, 0, num.length - 1);
+    }
+    public int helper(int[] num, int low, int hi){
+        if (low == hi) return num[low];
+        int mid = low + (hi - low) / 2;
+        if (num[low] < num[hi]) return num[low];
+        if (num[mid] == num[low]){
+            int min1 = helper(num, low, mid);
+            int min2 = helper(num, mid + 1, hi);
+            return Math.min(min1, min2);
+        }
+        else if (num[mid] > num[low]) return helper(num, mid + 1, hi);
+        else return helper(num, low, mid);
+    }
+}
