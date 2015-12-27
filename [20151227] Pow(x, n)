@@ -1,0 +1,43 @@
+// http://www.lintcode.com/en/problem/powx-n/
+
+/*
+这道题要考虑特殊情况：
+(1) x是负数
+(2) n是0
+(3) x是小数
+(4) n是负数
+在主函数里面对这些特殊情况进行记录然后将数据变为一般形式，然后再传入helper函数中进行计算，最后再对helper的返回值进行调整。
+*/
+
+public double myPow(double x, int n) {
+        // Write your code here
+        double sign = x >= 0 ? 1 : -1;
+        x = Math.abs(x);
+        boolean reverse = false;
+        if (x < 1 && n < 0){
+            x = 1 / x;
+            n = Math.abs(n);
+        }
+        else if (x < 1){
+            reverse = true;
+            x = 1 / x;
+        }
+        else if (n < 0){
+            reverse = true;
+            n = Math.abs(n);
+        }
+        double res = helper(x, n);
+        res = res * sign;
+        return reverse == true ? 1 / res : res;
+    }
+    public double helper(double x, int n){
+        if (n == 0) return 1;
+        if (n == 1) return x;
+        double res = x;
+        int i = 1;
+        while (i * 2 <= n){
+            i = i * 2;
+            res = res * res;
+        }
+        return res * myPow(x, n - i);
+    }
