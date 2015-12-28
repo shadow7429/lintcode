@@ -1,0 +1,42 @@
+// http://www.lintcode.com/en/problem/gray-code/#
+
+/*长度为n的格雷码总共有2^n个数字*/
+
+public class Solution {
+    /**
+     * @param n a number
+     * @return Gray code
+     */
+    public ArrayList<Integer> grayCode(int n) {
+        // Write your code here
+        int totalNum = 1 << n;
+        ArrayList<Integer> res = new ArrayList<Integer>();
+        res.add(0);
+        if (n == 0) return res;
+        res.add(1);
+        int count = 2;
+        int index = 1;
+        while (count < totalNum){
+            int num1 = res.get(index) * 2;
+            int num2 = num1 + 1;
+            if (index % 2 == 1){
+                res.add(num2);
+                count++;
+                if (count < totalNum) {
+                    res.add(num1);
+                    count++;
+                }
+            }
+            else{
+                res.add(num1);
+                count++;
+                if (count < totalNum){
+                    res.add(num2);
+                    count++;
+                }
+            }
+            index++;
+        }
+        return res;
+    }
+}
