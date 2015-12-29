@@ -1,0 +1,32 @@
+// http://www.lintcode.com/en/problem/binary-tree-level-order-traversal-ii/
+
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: buttom-up level order a list of lists of integer
+     */
+    public ArrayList<ArrayList<Integer>> levelOrderBottom(TreeNode root) {
+        // write your code here
+        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+        if (root == null) return res;
+        LinkedList<TreeNode> l1 = new LinkedList<TreeNode>();
+        LinkedList<TreeNode> l2 = new LinkedList<TreeNode>();
+        l1.add(root);
+        ArrayList<Integer> level = new ArrayList<Integer>();
+        while (l1.size() > 0 || l2.size() > 0){
+            if (l1.size() == 0){
+                l1.addAll(l2);
+                l2 = new LinkedList<TreeNode>();
+                res.add(0, level);
+                level = new ArrayList<Integer>();
+                continue;
+            }
+            TreeNode node = l1.removeFirst();
+            level.add(node.val);
+            if (node.left != null) l2.add(node.left);
+            if (node.right != null) l2.add(node.right);
+        }
+        res.add(0, level);                              //-------------要记住while循环的终止条件，最后要将最后一个level加到res中。
+        return res;
+    }
+}
