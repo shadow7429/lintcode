@@ -1,0 +1,43 @@
+// http://www.lintcode.com/en/problem/graph-valid-tree/#
+
+
+/*
+这道题的思路就是，如果要判断一个图是一个合法的树，需要进行两方面的判断：
+(1) 连通性
+(2) 无环
+所以我们选择的方案是将节点进行分组，如果一条边上的两个节点属于一个组，则说明出现了环，返回false；
+否则，这两个组即可合并成一个，所以每增加一条边，并且没有返回false，可知这条边将两个不连通的部分，连接
+起来了，因此组的个数减一，所以最后进行判断，组的个数应该为1。
+具体操作的时候，最开始每一个节点都是一个单独的分组，然后随着边数的增加，组之间进行合并。用边的第二个节点
+作为组的编号。
+*/
+public class Solution {
+    /**
+     * @param n an integer
+     * @param edges a list of undirected edges
+     * @return true if it's a valid tree, or false
+     */
+    public boolean validTree(int n, int[][] edges) {
+        // Write your code here
+        int[] nodeEnd = new int[n];
+        for (int i = 0; i < n; i++) nodeEnd[i] = i;
+        int count = n;
+        
+        for (int i = 0; i < edges.length; i++){
+            int start = edges[i][0];
+            int end = edges[i][1];
+            if (nodeEnd[start] == nodeEnd[end]) return false;
+            else{
+                for (int j = 0; j < nodeEnd.length; j++){
+                    if (nodeEnd[j] == nodeEnd[start]){
+                        nodeEnd[j] = nodeEnd[end];
+                    }
+                }
+                count--;
+            }
+        }
+        if (count == 1) return true;
+        else return false;
+    }
+}
+
