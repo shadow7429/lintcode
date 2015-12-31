@@ -1,0 +1,78 @@
+// http://www.lintcode.com/en/problem/k-sum-ii/
+
+
+/*
+思路就是还是想利用tree sum的两个指针的方法，所以就先递归找前k - 2个数字，然后剩余的两个数字在剩下的数组中寻找。
+*/
+public class Solution {
+    /**
+     * @param A: an integer array.
+     * @param k: a positive integer (k <= length(A))
+     * @param target: a integer
+     * @return a list of lists of integer 
+     */ 
+    public ArrayList<ArrayList<Integer>> kSumII(int[] A, int k, int target) {
+        // write your code here
+        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+        if (A == null || A.length == 0) return res;
+        
+        if (k == 1){
+            for (int i : A){
+                if (i == target){
+                    ArrayList<Integer> tmp = new ArrayList<Integer>();
+                    tmp.add(i);
+                    res.add(tmp);
+                    return res;
+                }
+            }
+            return res;
+        }
+        
+        Arrays.sort(A);
+        helper(new ArrayList<Integer>(), 0, res, A, 0, k, target);
+        return res;
+    }
+    
+    public void helper(ArrayList<Integer> current, int currentSum, 
+                       ArrayList<ArrayList<Integer>> res, int[] A, 
+                       int start, int k, int target){
+        if (start > A.length - 2) return;
+        int need = k - current.size();
+        
+        if (need == 2){
+            ArrayList<ArrayList<Integer>> tmp = check(A, target - currentSum, start);
+            if (tmp.size() == 0) return;
+            for (ArrayList<Integer> tmpl : tmp){
+                ArrayList<Integer> l = new ArrayList<Integer>(current);
+                l.addAll(tmpl);
+                res.add(l);
+            }
+            return;
+        }
+        for (int i = start; i < A.length; i++){
+            ArrayList<Integer> tmp = new ArrayList<Integer>(current);
+            tmp.add(A[i]);
+            helper(tmp, currentSum + A[i], res, A, i + 1, k, target);
+        }
+        return;
+    }
+    
+    public ArrayList<ArrayList<Integer>> check(int[] A, int target, int start){
+        int low = start;
+        int hi = A.length - 1;
+        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+        while (low < hi){
+            if (A[low] + A[hi] == target) {
+                ArrayList<Integer> tmp = new ArrayList<Integer>();
+                tmp.add(A[low]);
+                tmp.add(A[hi]);
+                res.add(tmp);
+                low++;
+                hi--;
+            }
+            else if (A[low] + A[hi] > target) hi--;
+            else if (A[low] + A[hi] < target) low++;
+        }
+        return res;
+    }
+}
