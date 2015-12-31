@@ -1,0 +1,46 @@
+// http://www.lintcode.com/en/problem/topological-sorting/
+
+
+/*
+图的题一般都是先count出来每个节点的入度，然后再遍历图的过程中，改变其他节点的入度，完成各种操作。
+*/
+public class Solution {
+    /**
+     * @param graph: A list of Directed graph node
+     * @return: Any topological order for the given graph.
+     */    
+    public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
+        // write your code here
+        ArrayList<DirectedGraphNode> list = new ArrayList<DirectedGraphNode>();
+        LinkedList<DirectedGraphNode> set = new LinkedList<>();
+        HashMap<DirectedGraphNode, Integer> indegree = new HashMap<DirectedGraphNode, Integer>();
+        for(DirectedGraphNode n : graph){
+            ArrayList<DirectedGraphNode> neighbors = n.neighbors;
+            if (neighbors.size() == 0) continue;
+            for (DirectedGraphNode neighbor : neighbors){
+                if (!indegree.containsKey(neighbor)) indegree.put(neighbor, 1);
+                else indegree.put(neighbor, indegree.get(neighbor) + 1);
+            }
+        }
+        for (DirectedGraphNode n : graph){
+            if (!indegree.containsKey(n)) set.add(n);
+        }
+        while (!set.isEmpty()){
+            DirectedGraphNode n = set.removeFirst();
+            list.add(n);
+            ArrayList<DirectedGraphNode> neighbors = n.neighbors;
+            if (neighbors.size() == 0) continue;
+            for (DirectedGraphNode neighbor : neighbors){
+                int num = indegree.get(neighbor);
+                if (num == 0) continue;
+                indegree.put(neighbor, num - 1);
+                if (num - 1 == 0){
+                    if (!set.contains(neighbor) && !list.contains(neighbor)) {
+                        set.add(neighbor);
+                    }
+                }
+            }
+        }
+        return list;
+    }
+}
