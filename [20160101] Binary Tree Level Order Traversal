@@ -1,0 +1,71 @@
+// http://www.lintcode.com/en/problem/binary-tree-level-order-traversal/
+
+/*
+这道题的三种基本做法如下：（1）两个List （2）一个queue (3) DFS
+*/
+
+(1)
+public class Solution {
+    public ArrayList<ArrayList<Integer>> levelOrder(TreeNode root) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+        if (root == null) return res;
+        LinkedList<TreeNode> p = new LinkedList<>();
+        LinkedList<TreeNode> q = new LinkedList<>();
+        p.add(root);
+        ArrayList<Integer> level = new ArrayList<>();
+        
+        while (!p.isEmpty()){
+            TreeNode node = p.removeFirst();
+            level.add(node.val);
+            if (node.left != null) q.add(node.left);
+            if (node.right != null) q.add(node.right);
+            if (p.isEmpty()){       
+                p.addAll(q);
+                q = new LinkedList<>();
+                res.add(level);
+                level = new ArrayList<>();
+            }
+        }
+        return res;
+    }
+}
+
+(2)
+/*
+这个其实就是通过一个for循环减少一个用来临时存储TreeNode的list，通过for循环来输出一层。
+*/
+public class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        List<List<Integer>> wrapList = new LinkedList<List<Integer>>();
+        if(root == null) return wrapList;
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            int levelNum = queue.size();
+            List<Integer> subList = new LinkedList<Integer>();
+            for(int i=0; i<levelNum; i++) {
+                if(queue.peek().left != null) queue.offer(queue.peek().left);
+                if(queue.peek().right != null) queue.offer(queue.peek().right);
+                subList.add(queue.poll().val);
+            }
+            wrapList.add(subList);
+        }
+        return wrapList;
+    }
+}
+
+(3)
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        levelHelper(res, root, 0);
+        return res;
+    }
+    public void levelHelper(List<List<Integer>> res, TreeNode root, int height) {
+        if (root == null) return;
+        if (height >= res.size()) {
+            res.add(new LinkedList<Integer>());
+        }
+        res.get(height).add(root.val);
+        levelHelper(res, root.left, height+1);
+        levelHelper(res, root.right, height+1);
+    }
