@@ -1,0 +1,46 @@
+// http://www.lintcode.com/en/problem/the-smallest-difference/
+
+
+/*
+这道题翻译过来其实就是对于数组A中每个数字，找到数组B中数字与它的最小Dif，进而找出两个数组的最小Dif。
+所以可以知道，“对于数组A中的每个数字”通过遍历数组A来实现，“找到数组B中数字与它的最小Dif”通过拿到数组
+A中的一个数字然后在数组B中进行二叉搜索可实现。二叉搜索的前提是数组是有序的，所以先把B进行排序。
+在二叉搜索的过程中，因为是找最小的Dif，而这个Dif不一定为0；所以搜索的时候要注意边界条件的设定。
+对于一个数字a，以及一个数组b1......bi.......bn来说。如果dif(a, b1) < dif(a, bi)那么说明最小的dif一定存在
+在左边，如果dif(a, bi) > dif(a, bn) 则说明最小的dif一定存在在右边。不存在dif(a, bi)最大的可能！如果dif(a, bi)
+在三者中最小，则不确定，可能还有更小的存在在两边，所以就要对两个进行递归然后取得比较小的值。
+这里要注意的是如果dif(a, b1) == dif(a, bi)那么不能说明这个dif是最小的，只能说明最小的存在在左边。
+对于二叉搜索的终止条件这里有三个：
+(1) 当搜索范围内只有一个数值
+(2) 当搜索范围内只有两个数值（返回较小的
+(3) 当出现dif == 0那必然是最小的，即返回
+时间复杂度为O(nlgn)
+*/
+public class Solution {
+    public int smallestDifference(int[] A, int[] B) {
+        // write your code here
+        Arrays.sort(A);
+        Arrays.sort(B);
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i < A.length; i++){
+            int a = A[i];
+            res = Math.min(res, helper(a, B, 0, B.length - 1));
+            if (res == 0) return res;
+        }
+        return res;
+    }
+    public int helper(int a, int[] B, int low, int hi){
+        while (true){
+            int mid = low + (hi - low) / 2;
+            int dif1 = (int) Math.abs(B[low] - a);
+            int dif2 = (int) Math.abs(B[hi] - a);
+            int dif = (int) Math.abs(B[mid] - a);
+            if (low == hi) return dif;
+            if (low == hi - 1) return Math.min(dif1, dif2);
+            if (dif == 0) return 0;
+            if (dif1 <= dif) hi = mid - 1;
+            else if (dif2 <= dif) low = mid + 1;
+            else return Math.min(helper(a, B, low, mid), helper(a, B, mid, hi));
+        }
+    }
+}
