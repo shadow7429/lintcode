@@ -1,0 +1,49 @@
+// http://www.lintcode.com/en/problem/sort-letters-by-case/
+
+
+/*
+这道题实现的是inplace的替换，想把所有的小写字母放在前面，把大写字母放在后面，所以实际上就是
+一个指针从前向后，一个指针从后向前，如果前面的指针为大写，后面的指针为小写，就交换两者的值。
+前面指针的移动是随着遍历chars数组进行的，对每个字母进行isUpperCase的判断，后面的指针是每一次
+遇到小写字母就停在那里，等待前面遍历到大写字母，交换之后通过while循环向前寻找到下一个小写字母。
+整个函数的终止条件就是这两个指针相遇。
+时间复杂度为O(n)。
+*/
+public class Solution {
+    /** 
+     *@param chars: The letter array you should sort by Case
+     *@return: void
+     */
+    public void sortLetters(char[] chars) {
+        //write your code here
+        int change = -1;
+        for (int i = chars.length - 1; i >= 0; i--){
+            if (Character.isLowerCase(chars[i])){
+                change = i;
+                break;
+            }
+        }
+        if (change == -1 || change == 0) return;
+        int i = 0;
+        while (i < change){
+            if (Character.isLowerCase(chars[i])) {
+                i++;
+                continue;
+            }
+            else{
+                char tmp = chars[i];
+                chars[i] = chars[change];
+                chars[change] = tmp;
+                
+                while (change > i){
+                    if (Character.isLowerCase(chars[change])){
+                        break;
+                    }
+                    else change--;
+                }
+                i++;
+            }
+        }
+        return;
+    }
+}
