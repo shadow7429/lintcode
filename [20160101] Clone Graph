@@ -1,0 +1,48 @@
+// http://www.lintcode.com/en/problem/clone-graph/
+
+/*
+可以看到这个题目中对于前面已经出现的边后面就不会出现了，{0,1,2#1,2#2,2} 可以看到0与1之间的联系已经出现
+在了节点0中，所以在1中就没有了，所以不会出现重复边的问题。
+在我们的方法中，helper函数for循环之前就将当前传入的node本身进行了复制，在这个节点将node的信息加入到了
+map中，之后通过for循环将它的邻居进行了复制。所以如果传入helper函数的node进行检查已经出现在了map中，
+那么就说明这个节点已经被复制了（包括它的邻居信息）所以就可以直接返回这个节点map中对应的节点即可。
+若是没有则进行正常的复制过程。
+另外因为这个过程相当于DFS，所以在for循环中因为是一直向下进行，所以可能后面要添加到node的neighbor中的
+节点，在前面已经复制过了，所以这个时候不用对这个节点进行递归了，只需要将map中的对应点加入到neighbor中。
+这道题要理清的一个问题是，不存在对于一个点的不完全复制，一旦复制了，就是完全复制了，所以如果一个点一旦
+存在在map中，就可以直接得到node了。
+*/
+public class Solution {
+    /**
+     * @param node: A undirected graph node
+     * @return: A undirected graph node
+     */
+    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+        // write your code here
+        if (node == null) return node;
+        HashMap<Integer, UndirectedGraphNode> map = new HashMap<Integer, UndirectedGraphNode>();
+        return helper(map, node);
+    }
+    public UndirectedGraphNode helper(HashMap<Integer, UndirectedGraphNode> map, UndirectedGraphNode node){
+        
+        UndirectedGraphNode nodeCloned;
+        if (map.containsKey(node.label)) return map.get(node.label);
+        else {
+            nodeCloned = new UndirectedGraphNode(node.label);
+            map.put(node.label, nodeCloned);
+        }
+        ArrayList<UndirectedGraphNode> neighbors = node.neighbors;
+        if (neighbors.size() == 0) return nodeCloned;
+        for (UndirectedGraphNode neighbor : neighbors){
+            int neighborLabel = neighbor.label;
+            if (map.containsKey(neighborLabel)){
+                UndirectedGraphNode cloneNeighbor = map.get(neighborLabel);
+                nodeCloned.neighbors.add(cloneNeighbor);
+            }
+            else {
+                nodeCloned.neighbors.add(helper(map, neighbor));
+            }
+        }
+        return nodeCloned;
+    }
+}
