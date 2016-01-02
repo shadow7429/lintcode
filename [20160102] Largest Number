@@ -1,0 +1,31 @@
+// http://www.lintcode.com/en/problem/largest-number/
+
+/*
+其实就是重写Comparator中的compare函数的问题。需要注意的如下：
+*/
+public class Solution {
+    /**
+     *@param num: A list of non negative integers
+     *@return: A string
+     */
+    public String largestNumber(int[] num) {
+        // write your code here
+        String[] s = new String[num.length];
+        for (int i = 0; i < num.length; i++){
+            s[i] = String.valueOf(num[i]);
+        }
+        Arrays.sort(s, new Comparator<String>(){
+            public int compare(String s1, String s2){            //--------------要有public
+                String ss1 = s1 + s2;
+                String ss2 = s2 + s1;
+                return ss1.compareTo(ss2);                       //--------------不能将String转化为int进行比较，可能会溢出。
+            }
+        });
+        StringBuilder sb = new StringBuilder();
+        for (int i = s.length - 1; i >= 0; i--) sb.append(s[i]);
+        String res = sb.toString();
+        while (res.charAt(0) == '0' && res.length() > 1) res = res.substring(1); //----------可能存在输入中有多个0的情况，所以当首字母
+                                                                                 //----------为‘0’并且字符串长度大于1的时候将0去除。
+        return res;
+    }
+}
