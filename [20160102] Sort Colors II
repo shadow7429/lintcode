@@ -1,0 +1,34 @@
+// http://www.lintcode.com/en/problem/sort-colors-ii/
+
+
+/*
+在这道题中，I中是利用三个count来记录下来每一个颜色出现的次数。而这个里面如果要记录的话，
+需要建立一个k长的数组来记录，这样利用了多余的空间。
+本方法中没有用到k（应该需要改进），方法类似于sort letter by case，通过前后两个指针来进行。
+前面的指针随着对colors的遍历递增，后面的指针每一次都从最后面向前，如果当前前面的指针的值
+大于后面的指针的值，则交换，否则后面的指针向前移动一个位置，直到两个指针相遇。这样就使得，
+前面指针走过的位置都能保证指针前面的值小于等于指针指向的值，最后完成了排序。
+时间复杂度为O(n^2);
+*/
+class Solution {
+    /**
+     * @param colors: A list of integer
+     * @param k: An integer
+     * @return: nothing
+     */
+    public void sortColors2(int[] colors, int k) {
+        // write your code here
+        for (int i = 0; i < colors.length; i++){
+            int last = colors.length - 1;
+            while (last > i){
+                if (colors[last] < colors[i]){
+                    int tmp = colors[last];
+                    colors[last] = colors[i];
+                    colors[i] = tmp;
+                }
+                else last--;
+            }
+        }
+        return;
+    }
+}
