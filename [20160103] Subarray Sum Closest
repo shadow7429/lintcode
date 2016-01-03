@@ -1,0 +1,48 @@
+// http://www.lintcode.com/en/problem/subarray-sum-closest/#
+
+/*
+brute的方法就是用两层循环，但是超时。
+*/
+
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: A list of integers includes the index of the first number 
+     *          and the index of the last number
+     */
+    public int[] subarraySumClosest(int[] nums) {
+        int[] res = new int[2];
+        if (nums == null || nums.length == 0) return res;
+        if (nums.length == 1){
+            res[0] = 0;
+            res[1] = 0;
+            return res;
+        }
+        int[][] culmulate = new int[nums.length][2];
+        culmulate[0][0] = nums[0];
+        culmulate[0][1] = 0;
+        for (int i = 1; i < nums.length; i++){
+            culmulate[i][0] = culmulate[i - 1][0] + nums[i];
+            culmulate[i][1] = i;
+        }
+        Arrays.sort(culmulate, new Comparator<int[]>(){
+            public int compare(int[] a, int[] b){
+                return Integer.compare(a[0], b[0]);   
+            }
+        });
+        int min = Integer.MAX_VALUE;
+        int start = 0;
+        int end = 0;
+        for (int i = 0; i < nums.length - 1; i++){
+            int tmp = culmulate[i + 1][0] - culmulate[i][0];
+            if (tmp <= min){
+                start = Math.min(culmulate[i + 1][1], culmulate[i][1]) + 1;         //-------------注意这里加1
+                end = Math.max(culmulate[i + 1][1], culmulate[i][1]);
+                min = tmp;
+            }
+        }
+        res[0] = start;
+        res[1] = end;
+        return res;
+    }
+}
