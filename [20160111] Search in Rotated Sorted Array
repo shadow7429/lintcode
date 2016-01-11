@@ -1,0 +1,52 @@
+// http://www.lintcode.com/en/problem/search-in-rotated-sorted-array/
+
+
+/*
+对于在有序的序列中搜索一个target一般都是用二叉搜索，在本题中，分为以下几种情况考虑。
+(1) 如果当前序列是递增序列，即[1，2，3，4，5] ，A[mid] = 3且A[mid] >= A[low] && A[mid] <= A[hi];
+(2) 如果当前序列存在rotate，并且mid在第一个递增序列中，即[5，6，7，8，1，2]，A[mid] = 7且A[mid] >= A[low] && A[mid] >= A[hi];
+(3) 如果当前序列存在rotate，并且mid在第二个递增序列中，即[5，6，1，2，3，4]，A[mid] = 1且A[mid] <= A[low] && A[mid] <= A[hi];
+对这三种情况分别进行 target > A[mid] 和 target < A[mid]的两种情况的讨论然后递归。
+*/
+public class Solution {
+    /** 
+     *@param A : an integer rotated sorted array
+     *@param target :  an integer to be searched
+     *return : an integer
+     */
+    public int search(int[] A, int target) {
+        // write your code here
+        if (A.length == 0) return -1;
+        return helper(A, 0, A.length - 1, target);
+    }
+    public int helper(int[] A, int low, int hi, int target){
+        if (low > hi) return -1;
+        int mid = low + (hi - low) / 2;
+        if (A[mid] == target) return mid;
+        if (A[mid] >= A[low] && A[mid] <= A[hi]){
+            if (target > A[mid]){
+               return helper(A, mid + 1, hi, target);
+            }
+            else {
+                return helper(A, low, mid - 1, target);
+            }
+        }
+        else if (A[mid] >= A[low] && A[mid] >= A[hi]){
+            if (target > A[mid]) return helper(A, mid + 1, hi, target);
+            else {
+                int left = helper(A, low, mid - 1, target);
+                int right = helper(A, mid + 1, hi, target);
+                return left >= 0 ? left : right;
+            }
+        }
+        else if (A[mid] <= A[low] && A[mid] <= A[hi]){
+            if (target > A[mid]){
+                int left = helper(A, low, mid - 1, target);
+                int right = helper(A, mid + 1, hi, target);
+                return left >= 0 ? left : right;
+            }
+            else return helper(A, low, mid - 1, target);
+        }
+        else return -1;
+    }
+}
