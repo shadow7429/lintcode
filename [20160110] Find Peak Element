@@ -1,0 +1,33 @@
+// http://www.lintcode.com/en/problem/find-peak-element/
+
+/*
+这道题的brute方法就是遍历一遍，对于每一个element进行比较判断。
+因为follow up了时间复杂度的要求，O(logn)所以知道应该用类似于二叉搜索的方法。
+所以就写了一个helper函数，如果mid的地方值复合条件就返回index，若不复合，就对两边
+的子数组进行递归判断，若都不符合返回-1；
+这里要注意的地方是对于边界点的判断，通过题目本身可以知道peak element不可能是边界点，
+即A[0]和A[A.length - 1]两个值不可能是peak element。
+另外下边代表标注的位置总是忘。！！！！
+*/
+class Solution {
+    /**
+     * @param A: An integers array.
+     * @return: return any of peek positions.
+     */
+    public int findPeak(int[] A) {
+        // write your code here
+        return helper(A, 0, A.length - 1);
+    }
+    public int helper(int[] A, int low, int hi){
+        if (low > hi) return -1;                           //-----------------!!!!没有这个条件判断，会出现溢出，因为递归没有头。
+        int mid = low + (hi - low) / 2;
+        if (mid != 0 && mid != A.length - 1){
+            if (A[mid] > A[mid - 1] && A[mid] > A[mid + 1]) return mid;
+        }
+        int left = helper(A, low, mid - 1);
+        int right = helper(A, mid + 1, hi);
+        if (left > 0) return left;
+        else if (right > 0) return right;
+        else return -1;
+    }
+}
