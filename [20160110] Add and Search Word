@@ -1,0 +1,46 @@
+// http://www.lintcode.com/en/problem/add-and-search-word/
+
+
+/*
+这道题要注意的地方是:
+(1) '.'代表着任意一个字母，并且必须代表字母，也就是说'.'不能为空。
+(2) 我采用的比较带'.'的字符的方法是将word中所有这个字符的出现位置取出，然后对list中的每一个字符串
+与它进行各个子串的比较（以'.'分格的），这个时候做的时候忽略了对于最后一个'.'到字符串末尾这个子串。
+*/
+public class WordDictionary {
+
+    List<String> list;
+    public WordDictionary(){
+        list = new ArrayList<String>();
+    }
+    public void addWord(String word) {
+        // Write your code here
+        if (!list.contains(word)) list.add(word);
+        return;
+    }
+
+    public boolean search(String word) {
+        if (list.isEmpty()) return false;
+        if (word.indexOf('.') == -1) return list.contains(word);
+        List<Integer> loc = new ArrayList<Integer>();
+        for (int i = 0; i < word.length(); i++){
+            if (word.charAt(i) == '.') loc.add(i);
+        }
+        for (String s : list){
+            if (s.length() != word.length()) continue;
+            
+            int start = 0;
+            int i = 0;
+            while (i < loc.size()){
+                int end = loc.get(i);
+                if (!s.substring(start, end).equals(word.substring(start, end))) break;
+                start = end + 1;
+                i++;
+            }
+            if (i == loc.size()){
+                if (s.substring(start, s.length()).equals(word.substring(start, word.length()))) return true;   //------------！！！！！
+            }
+        }
+        return false;
+    }
+}
