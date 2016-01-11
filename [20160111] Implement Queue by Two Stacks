@@ -1,0 +1,35 @@
+// http://www.lintcode.com/en/problem/implement-queue-by-two-stacks/
+
+/*
+可以知道queue和stack对于同一个数组序列来说，pop出来的顺序是正好相反的，所以我们只需要用两个stack，
+一个进行接收数据，然后将数据依次的pop出并push到另一个stack中，最终从第二个stack中pop出来的序列
+就与使用一个queue的顺序是相同的了。
+*/
+
+public class Queue {
+    private Stack<Integer> stack1;
+    private Stack<Integer> stack2;
+
+    public Queue() {
+       // do initialization if necessary
+       stack1 = new Stack<>();
+       stack2 = new Stack<>();
+    }
+    
+    public void push(int element) {
+        // write your code here
+        while (!stack2.isEmpty()) stack1.push(stack2.pop());
+        stack1.push(element);
+        while (!stack1.isEmpty()) stack2.push(stack1.pop());
+    }
+
+    public int pop() {
+        // write your code here
+        return stack2.pop();
+    }
+
+    public int top() {
+        // write your code here
+        return stack2.peek();
+    }
+}
