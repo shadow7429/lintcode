@@ -1,0 +1,57 @@
+// http://www.lintcode.com/en/problem/invert-binary-tree/
+
+
+/*
+这道题要看清楚问题的本质，其实就是对每个节点将左右子节点进行交换，并没有其他的要求限制。
+*/
+// recursive
+public class Solution {
+    /**
+     * @param root: a TreeNode, the root of the binary tree
+     * @return: nothing
+     */
+    public void invertBinaryTree(TreeNode root) {
+        // write your code here
+        helper(root);
+        return;
+    }
+    public TreeNode helper(TreeNode node){
+        if (node == null) return null;
+        if (node.left == null && node.right == null) return node;
+        TreeNode tmp = node.right;
+        node.right = helper(node.left);
+        node.left = helper(tmp);
+        return node;
+    }
+}
+
+// iterative
+/*
+对于可以要求iterative方法解决而且resursive方法很简单就能想出的题目，我们只需要借助于一个结构，一般
+这种都是借助于stack或者list即可操作完成。在这道题里面，因为resursive就是顺着一条路径一直向下走，我们
+如果改成iterative的话就需要对走过的进行保存然后对于前面的进行交换操作，所以很简单可以使用linkedlist。
+将后面走过的节点存放在linkedlist中，以便之后操作，然后通过removeFrist（）函数来对头节点的两个子节点
+进行交换。
+*/
+public class Solution {
+    /**
+     * @param root: a TreeNode, the root of the binary tree
+     * @return: nothing
+     */
+    public void invertBinaryTree(TreeNode root) {
+        // write your code here
+        if (root == null) return;
+        LinkedList<TreeNode> list = new LinkedList<>();
+        list.add(root);
+        while (!list.isEmpty()){
+            TreeNode tmp = list.removeFirst();
+            TreeNode l = tmp.left;
+            TreeNode r = tmp.right;
+            tmp.left = r;
+            tmp.right = l;
+            if (l != null) list.add(l);
+            if (r != null) list.add(r);
+        }
+        return;
+    }
+}
