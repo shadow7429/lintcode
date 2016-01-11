@@ -1,0 +1,27 @@
+// http://www.lintcode.com/en/problem/single-number-ii/
+
+/*
+这道题中说明了，其他数字都是出现3的倍数次，只有一个只出现了1次的数，其实我们只需要利用两个list，一个
+list上面存放着出现了多于1次的数字，另一个list中存放着只出现了一次的数字，这样就可以得到想要的结果了。
+*/
+
+public class Solution {
+	/**
+	 * @param A : An integer array
+	 * @return : An integer 
+	 */
+    public int singleNumberII(int[] A) {
+        // write your code here
+        List<Integer> list = new ArrayList<>();
+        List<Integer> listmore = new ArrayList<>();
+        for (int i : A){
+            if (listmore.contains(i)) continue;
+            else if (list.contains(i)){
+                list.remove(new Integer(i));
+                listmore.add(i);
+            }
+            else list.add(i);
+        }
+        return list.get(0);
+    }
+}
