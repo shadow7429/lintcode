@@ -1,0 +1,23 @@
+// http://www.lintcode.com/en/problem/coins-in-a-line/
+
+/*
+这道题的思路就是，如果当前只剩下1个或者2个coin的话，并且是第一个选手拿，那么他就赢了。
+如果不是，那么他拿了1个或者2个剩下的棋子个数如果在可以赢的棋子个数序列中，那么就说明
+对手赢了，他输了。所以我们只需要把可以赢的coin数存储起来，然后对之后的每一个coin数进行
+判断即可。最后判断n是否在可以赢的序列中。
+*/
+    public boolean firstWillWin(int n) {
+        // write your code here
+        if (n == 1 || n == 2) return true;
+        List<Integer> win = new ArrayList<Integer>();
+        win.add(1);
+        win.add(2);
+        for (int i = 3; i <= n; i++){
+            int num1 = i - 1;
+            int num2 = i - 2;
+            if (win.contains(num1) && win.contains(num2)) continue;
+            else win.add(i);
+        }
+        return win.contains(n);
+    }
+    
