@@ -1,0 +1,24 @@
+// http://www.lintcode.com/en/problem/search-range-in-binary-search-tree/
+
+/*
+这道题其实就是在遍历树的基础上加上对bst的利用。
+*/
+    public ArrayList<Integer> searchRange(TreeNode root, int k1, int k2) {
+        // write your code here
+        ArrayList<Integer> res = new ArrayList<>();
+        helper(root, k1, k2, res);
+        Collections.sort(res);
+        return res;
+    }
+    public void helper(TreeNode node, int k1, int k2, ArrayList<Integer> res){
+        if (node == null) return;
+        if (node.val >= k1 && node.val <= k2) res.add(node.val);
+        if (node.val > k1 && node.val < k2) {
+            helper(node.left, k1, k2, res);
+            helper(node.right, k1, k2, res);
+        }
+        else if (node.val <= k1) helper(node.right, k1, k2, res);
+        else if (node.val >= k2) helper(node.left, k1, k2, res);
+        
+        return;
+    }
