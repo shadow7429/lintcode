@@ -1,0 +1,18 @@
+// http://www.lintcode.com/en/problem/segment-tree-build/
+
+
+/*
+这道题很简单，就是递归的建立一棵树。
+*/
+
+    public SegmentTreeNode build(int start, int end) {
+        // write your code here
+        if (start > end) return null;
+        SegmentTreeNode root = new SegmentTreeNode(start, end);
+        if (start == end) return root;
+        SegmentTreeNode left = build(start, (start + end) / 2);
+        SegmentTreeNode right = build((start + end) / 2 + 1, end);
+        root.left = left;
+        root.right = right;
+        return root;
+    }
