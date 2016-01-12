@@ -1,0 +1,27 @@
+// http://www.lintcode.com/en/problem/jump-game-ii/
+
+/*
+这道题的思路就是，用一个数组来存储下来到达每一个节点的最小的jump次数。
+所以第一个节点step为0，后面的每一个i节点在求它的step的时候，都从j = 0开始检测能否从j到i一次jump到，
+如果可以，step[i] = step[j] + 1，且这个step应该为i到达i位置最小的jump数，这里要想清楚，例如序列
+【2，3，2，1，1，4】到达index = 4处，可以从index = 1或者index = 2，或者index = 3处到达，但是如果
+前面的节点能到达index = 2或index = 3，那么也一定能一步到达index = 1， 并且从index = 1已经能一步
+到达index = 4了，不能更少了，所以当我们从index = 0开始检测到了index = 1时已经确定能从该点一步到达
+index = 4了，我们就不需要继续向后检测index = 2、3...了。
+*/
+public class Solution {
+    public int jump(int[] A) {
+        // write your code here
+        int[] step = new int[A.length];
+        step[0] = 0;
+        for (int i = 0; i < A.length; i++){
+            for (int j = 0; j < i; j++){
+                if (A[j] >= i - j){
+                    step[i] = step[j] + 1;
+                    break;
+                }
+            }
+        }
+        return step[A.length - 1];
+    }
+}
