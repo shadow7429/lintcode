@@ -1,0 +1,29 @@
+// http://www.lintcode.com/en/problem/backpack/
+
+/*
+这道题其实本质就是求在一个数组中若干个数相加与给定的target最接近的和。
+方法是动态规划：
+对于每一个A中的数字，内部循环j从m到0进行判断，如果j - A[i] >= 0 && size[j - A[i]] == true则说明在j - A[i]的基础上加入A[i]也是true，
+则size[j] = true;
+例如序列[2,3,5,7] target = 17。
+当i = 0时，内部循环进行循环，满足if判断的只有j = 2, 所以size[2] = true;
+当i = 1时，内部循环进行循环，满足if判断的有j = 3 和j = 5，所以目前来说size[0,2,3,5] = true
+依次进行下去可以得到所有的序列组合的和。
+我们再从m遍历到0查看size[]，当为true时返回。
+*/
+    public int backPack(int m, int[] A) {
+        // write your code here
+        if (A == null || A.length == 0) return 0;
+        boolean[] size = new boolean[m + 1];
+        size[0] = true;
+        for (int i = 1; i <= A.length; i++){
+            for (int j = m; j >= 0; j--){
+                if (j - A[i - 1] >= 0 && size[j - A[i - 1]] == true)
+                size[j] = true;
+            }
+        }
+        for (int i = m; i >= 0; i--){
+            if (size[i] == true) return i;
+        }
+        return 0;
+    }
