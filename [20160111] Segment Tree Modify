@@ -1,0 +1,23 @@
+// http://www.lintcode.com/en/problem/segment-tree-modify/
+
+/*
+这道题理解清楚题目意思就很好做了。
+实际上就是一直到达叶子结点，对于start == end == index的结点将其max更新为value（因为叶子结点的start和end相等）；
+然后通过两个子节点的max中的较大值赋给父亲节点的max，如此一直向上走到根节点返回。
+所以可以知道，这道题的遍历方法是后序遍历，如果helper中所写。
+*/
+    public void modify(SegmentTreeNode root, int index, int value) {
+        // write your code here
+        helper(root, index, value);
+        return;
+    }
+    public int helper(SegmentTreeNode node, int index, int value){
+        if (node.left == null && node.right == null){
+            if (node.start == index) node.max = value;
+            return node.max;
+        }
+        int left = helper(node.left, index, value);
+        int right = helper(node.right, index, value);
+        node.max = Math.max(left, right);
+        return node.max;
+    }
