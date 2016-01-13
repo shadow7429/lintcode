@@ -1,0 +1,54 @@
+// http://www.lintcode.com/en/problem/reverse-linked-list-ii/
+
+
+/*
+在这道关于链表的题中，要注意我们是用pre1和pre2两个指针来标注需要交换的两个节点各自的前节点，以
+完成节点的交换的，那么需要注意特殊情况，当pre1 == pre2的时候，则这个时候只剩下一个节点未被交换，
+不需要进行，直接break掉。若是pre1.next == pre2的时候可以知道需要交换的是两个相邻的节点，
+这时候只需要用一个pre1来完成交换即可，如果此时还用两个指针一起，会造成因为pre1的next改变了，使得pre2
+改变，只是另外一个需要被交换的节点改变，产生错误。
+对于指针问题要特别注意临界点，这里因为是从一段的两端向中间交换，所以要考虑的是两个指针相遇的特殊
+情况，大多数的list问题，都要进一步考虑到达null的特殊情况。
+*/
+    public ListNode reverseBetween(ListNode head, int m , int n) {
+        // write your code
+        if (head == null || head.next == null) return head;
+        if (m == n) return head;
+        
+        int len = n - m + 1;
+        ListNode pre1 = new ListNode(0);
+        pre1.next = head;
+        ListNode pre2 = pre1;
+        ListNode res = pre1;
+        for (int i = 1; i < m; i++){
+            pre1 = pre1.next;
+        }
+        int count = 0;
+        for (int i = 0; i < len / 2; i++){
+            pre2 = pre1;
+            for (int j = 0; j < len - count - 1; j++){
+                pre2 = pre2.next;
+            }
+            if (pre1 == pre2) break;
+            else if (pre1.next == pre2){
+                ListNode N = pre1.next;
+                pre1.next = N.next;
+                pre1 = pre1.next;
+                N.next = pre1.next;
+                pre1.next = N;
+                break;
+            }
+            count = count + 2;
+            ListNode n1 = pre1.next;
+            ListNode n2 = pre2.next;
+            pre1.next = n1.next;
+            pre2.next = n2.next;
+            
+            n2.next = pre1.next;
+            pre1.next = n2;
+            n1.next = pre2.next;
+            pre2.next = n1;
+            pre1 = pre1.next;
+        }
+        return res.next;
+    }
