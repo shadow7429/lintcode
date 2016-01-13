@@ -1,0 +1,25 @@
+// http://www.lintcode.com/en/problem/first-bad-version/
+
+/*
+这里对待isBadVersion()函数的调用次数有比较严格的约束，基本上只能调用logn次。
+因此不能通过SVNRepo.isBadVersion(mid) == true && SVNRepo.isBadVersion(mid - 1) == false来
+返回值，要想其他办法。并且因为题目中默认总有结果，也就是总有bad version，所以while循环为
+while(true)，之后if返回判断我们这里用的是if (checkMid && mid == low) return mid;因为我们
+每一次对low和hi进行修改，都是将第一个badversion缩小到一个一定会出现的范围内，所以当当前的
+checkMid为true，并且mid已经等于当前区域的最小值low了的时候，low一定是第一个badversion；
+*/
+    public int findFirstBadVersion(int n) {
+        // write your code here
+        // binary search
+        int low = 1;
+        int hi = n;
+        while (true){
+            int mid = low + (hi - low) / 2;
+            boolean checkMid = SVNRepo.isBadVersion(mid);
+            if (checkMid && mid == low) return mid;
+            if (checkMid){
+                hi = mid - 1;
+            }
+            else low = mid + 1;
+        }
+    }
