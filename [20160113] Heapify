@@ -1,0 +1,33 @@
+// http://www.lintcode.com/en/problem/heapify/
+
+/*
+Heap的数据结构是这样的：如果对于min-heap来说，A[i] <= A[i * 2 + 1] && A[i] <= A[i * 2 + 2],
+对于每一个A[i]均是如此，而A[i * 2 + 1] 和 A[i * 2 + 2]之间的order是无所谓的。
+因为我们只需要将数组的每一个i都进行这样的调整即可。
+面经中有一道变形题，求出一个数组的前k个最大的值，可以用max-heap。因为求出前k个，所以我们从
+i = k - 1位置出开始调整即可，因为如果一个位置发生与i位置的互换，是要从该位置向后递归进行
+调整的，因此最后可以保证数组的前k个数字即为最大的k个数字。
+*/
+    public void heapify(int[] A) {
+        // write your code here
+        for (int i = A.length / 2; i >= 0; i--){  //--------------------------注意这里是逆向进行的。！！！！
+            helper(A, i);
+        }
+        return;
+    }
+    public void helper(int[] A, int index){
+        if (index >= A.length) return;
+        int left = index * 2 + 1 < A.length ? A[index * 2 + 1] : Integer.MAX_VALUE;
+        int right = index * 2 + 2 < A.length ? A[index * 2 + 2] : Integer.MAX_VALUE;
+        if (left < A[index] && left < right){
+            A[2 * index + 1] = A[index];
+            A[index] = left;
+            helper(A, 2 * index + 1);
+        }
+        else if (right < A[index] && right < left){
+            A[2 * index + 2] = A[index];
+            A[index] = right;
+            helper(A, 2 * index + 2);
+        }
+        return;
+    }
