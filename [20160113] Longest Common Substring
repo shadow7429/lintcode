@@ -1,0 +1,39 @@
+// http://www.lintcode.com/en/problem/longest-common-substring/
+
+/*
+substring和subsequence不是一样的问题，substring是要连续的子序列，而subsequence不需要连续，但是
+要字符之间的相对位置是保持的。
+在这道题中，因为要找两个string的最大相同的连续子序列，所以我用了两层循环，从A的每一个位置处，
+都在内部进行一个在B上的从头到尾的循环，来检测可能出现的相同substring。
+这里要注意我们要对Astring走到了末尾和Bstring走到了末尾两种情形进行res的新计算，要不可能会因为
+循环的终结而少计算了可能性。
+*/
+
+    public int longestCommonSubstring(String A, String B) {
+        // write your code here
+        int res = 0;
+        if (A.length() == 0 || B.length() == 0) return 0;
+        
+        for (int i = 0; i < A.length(); i++){
+            int tmpI = i;
+            
+            for (int j = 0; j < B.length(); j++){
+                if (tmpI >= A.length()){                               // ----------------------(1)
+                    res = Math.max(res, tmpI - i);
+                    break;
+                }
+                if (A.charAt(tmpI) == B.charAt(j)){
+                    tmpI++;
+                }
+                else{
+                    res = Math.max(res, tmpI - i);
+                    tmpI = i;
+                    if (A.charAt(tmpI) == B.charAt(j)){
+                        tmpI++;
+                    }
+                }
+            }
+            res = Math.max(res, tmpI - i);                            // ------------------------(2)
+        }
+        return res;
+    }
