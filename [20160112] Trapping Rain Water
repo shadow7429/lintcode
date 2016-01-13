@@ -1,0 +1,48 @@
+// http://www.lintcode.com/en/problem/trapping-rain-water/
+
+/*
+这道题跟之前的那个container的题不同之处是，那一道只需要找出
+最大的容积即可，这一道要求出全部的水容量和。
+思路是这样的：
+遍历一遍数组，如果当前heights[i] >= heights[i - 1]，则说明该该处无法储存水，所以直接过。
+否则，就从i位置向后找，若找的过程中，heights[j] > heights[i - 1]了的话，则说明这区间内
+可形成一个容积，并且就算后面有更大的height，也没用，因为高度得取两边的较小值，也就是这个
+区域的heights[i - 1]。这个时候就算出这个区域的存水量加到res中，并且把i向后移动到j + 1处，
+开始新的容器找寻。如果heights[j]不大于heights[i - 1],但是heights[j] > heights[i]这说明
+可形成容器，但是后面如果出现更大的，需要进行更改，因为我们将这个时候的j以及heights[j]记录
+下来，并且继续进行寻找更大的j。如果一直到数组末尾，未能寻找到heights[j] > heights[i], 那么
+就说明以i-1为一边不能形成一个容器，所以进行i++，从下一位置重新找寻容器。
+*/
+    public int trapRainWater(int[] heights) {
+        // write your code here
+        int i = 1;
+        int res = 0;
+        while (i < heights.length){
+            if (heights[i] >= heights[i - 1]) {
+                i++;
+                continue;
+            }
+            int check = -1;
+            int h = heights[i];
+            for (int j = i + 1; j < heights.length; j++){
+                if (heights[j] > heights[i - 1]){
+                    check = j;
+                    break;
+                }
+                else if (heights[j] > h){
+                    h = heights[j];
+                    check = j;
+                }
+            }
+            if (check == -1){
+                i++;
+                continue;
+            }
+            int height = Math.min(heights[i - 1], heights[check]);
+            for (int k = i; k < check; k++) res = res + height - heights[k];
+            i = check + 1;
+        }
+        
+        return res;
+    }
+    
