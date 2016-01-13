@@ -1,0 +1,37 @@
+// http://www.lintcode.com/en/problem/longest-consecutive-sequence/#
+
+
+/*
+因为这道题要求时间复杂度为O(n)，所以我们不能将数组先排序然后进行操作，因为这样至少要O(nlogn)了。
+所以我们采用的方法是利用hashset。
+(1) 首先通过将每一个数字add进hashset得方法来进行去除重复项，因为重复项在longest consecutive sequence中是
+没有意义的。
+(2) 之后，通过对数组中的每一个值，进行向左向右一直查看来找出每一个值所存在的最大的consecutive sequence。
+这里注意当查看过一个left或者right之后，就可以将该值从hashset中去除掉了，因为其实left和right所在的最大的
+consecutive sequence也是当前的sequence。所以下次数组遍历到这个值的时候，可以不进行查看了。
+*/
+public class Solution {
+    public int longestConsecutive(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        int res = 1;
+        HashSet<Integer> hs = new HashSet<>();
+        for (int i : nums) hs.add(i);
+        for (int i : nums){
+            int left = i - 1;
+            int right = i + 1;
+            int count = 1;
+            while (hs.contains(left)){
+                count++;
+                hs.remove(left);
+                left--;
+            }
+            while (hs.contains(right)){
+                count++;
+                hs.remove(right);
+                right++;
+            }
+            res = Math.max(res, count);
+        }
+        return res;
+    }
+}
