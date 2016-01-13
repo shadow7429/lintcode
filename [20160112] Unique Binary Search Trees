@@ -1,0 +1,23 @@
+// http://www.lintcode.com/en/problem/unique-binary-search-trees/
+
+/*
+这道题因为节点的value可以从1 - n中选择，所以节点的选取有n种可能性，
+对于每一个选择来说，要进一步进行左右节点的选择，那么相当于在1 - (i - 1)
+以及 (i + 1) - n两个子序列中进一步的进行新树的构建，那么其实思想跟上一步
+一样，依次进行下去。对于一个根节点来说，BST的个数为左子树的可能数*右子树的可能数。
+这里要注意，当一个序列区间中low == hi的时候，很明显这个子树只有一个节点，所以返回
+1，当low > hi的时候，这个区间不能形成BST，但是要注意，因为左和右的关键是乘法，所以
+也应该返回1。
+*/
+    public int numTrees(int n) {
+        // write your code here
+        return helper(1, n);
+    }
+    public int helper(int low, int hi){
+        if (low >= hi) return 1;
+        int res = 0;
+        for (int i = low; i <= hi; i++){
+            res = helper(low, i - 1) * helper(i + 1, hi) + res;
+        }
+        return res;
+    }
