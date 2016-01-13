@@ -1,0 +1,41 @@
+// http://www.lintcode.com/en/problem/set-matrix-zeroes/
+
+/*
+inplace的做法会出现错误的地方在于四个角，无法判断是将行设为0还是将列设为0；
+在下面的做法中，是用两个数组，分别保存行和列的设置信息。
+也可以简单的直接改变matrix，的第一行和第一列，对于存在ambiguity的四个角的行列信息
+另外进行存储即可。
+*/
+public void setZeroes(int[][] matrix) {
+        // write your code here
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return;
+        int[] remainLine = new int[matrix.length];
+        int[] remainRow = new int[matrix[0].length];
+        Arrays.fill(remainLine, 1);
+        Arrays.fill(remainRow, 1);
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[i].length; j++){
+                if (matrix[i][j] == 0){
+                    remainLine[i] = 0;
+                    remainRow[j] = 0;
+                }
+            }
+        }
+        //按行
+        for (int i = 0; i < remainLine.length; i++){
+            if (remainLine[i] == 0){
+                for (int j = 0; j < matrix[i].length; j++){
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        //按列
+        for (int i = 0; i < remainRow.length; i++){
+            if (remainRow[i] == 0){
+                for (int j = 0; j < matrix.length; j++){
+                    matrix[j][i] = 0;
+                }
+            }
+        }
+        return;
+    }
