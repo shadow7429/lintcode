@@ -1,0 +1,18 @@
+// http://www.lintcode.com/en/problem/compare-strings/
+
+/*
+看清楚题目要求，注意B中出现了两次的字母，A中也至少出现两次才算满足条件。
+*/
+    public boolean compareStrings(String A, String B) {
+        // write your code here
+        if (A.length() == 0 && B.length() == 0) return true;
+        else if (A.length() == 0) return false;
+        else if (B.length() == 0) return true;
+        for (int i = 0; i < B.length(); i++){
+            char c = B.charAt(i);
+            int index = A.indexOf(c);
+            if (index == -1) return false;
+            A = A.substring(0, index) + A.substring(index + 1);
+        }
+        return true;
+    }
