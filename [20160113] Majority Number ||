@@ -1,0 +1,49 @@
+// http://www.lintcode.com/en/problem/majority-number-ii/
+
+/*
+用两个常量num1和num2记录下来出现次数最多的两个数，但是这里要注意，count1和count2并不
+代表着出现的次数，也不能表示出两个数字谁出现的次数多。
+所以应该再遍历一遍nums，计算出num1和num2真正出现的次数。
+*/
+    public int majorityNumber(ArrayList<Integer> nums) {
+        // write your code
+        int count1 = 0;
+        int count2 = 0;
+        int num1 = 0;
+        int num2 = 0;
+        for (Integer i : nums){
+            if (count1 > 0 && count2 > 0){
+                if (num1 == i) count1++;
+                else if (num2 == i) count2++;
+                else {
+                    count1--;
+                    count2--;
+                }
+            }
+            else if (count1 > 0){
+                if (num1 == i) count1++;
+                else{
+                    count2++;
+                    num2 = i;
+                }
+            }
+            else if (count2 > 0){
+                if (num2 == i) count2++;
+                else{
+                    count1++;
+                    num1 = i;
+                }
+            }
+            else {
+                count1++;
+                num1 = i;
+            }
+        }
+        count1 = 0;
+        count2 = 0;
+        for (Integer i : nums){
+            if (i == num1) count1++;
+            if (i == num2) count2++;
+        }
+        return count1 > count2 ? num1 : num2;
+    }
