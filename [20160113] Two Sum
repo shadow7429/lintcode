@@ -1,0 +1,31 @@
+// http://www.lintcode.com/en/problem/two-sum/
+
+/*
+这里是为了防止2 + 2 == 4 这种本身是一个数的情况出现，我们利用了indexOf和lastIndexOf这两个函数。
+*/
+    public int[] twoSum(int[] numbers, int target) {
+        int[] res = new int[2];
+        List<Integer> need = new ArrayList<Integer>();
+        for (int n : numbers){
+            need.add(target - n);
+        }
+        for (int i = 0; i < numbers.length; i++){
+            if (need.contains(numbers[i])){
+                if (need.indexOf(numbers[i]) == i){
+                    if (need.lastIndexOf(numbers[i]) == i) continue;
+                    else {
+                        res[0] = Math.min(i + 1, need.lastIndexOf(numbers[i]) + 1);
+                        res[1] = Math.max(i + 1, need.lastIndexOf(numbers[i]) + 1);
+                        break;
+                    }
+                }
+                else{
+                    res[0] = Math.min(i + 1, need.indexOf(numbers[i]) + 1);
+                    res[1] = Math.max(i + 1, need.indexOf(numbers[i]) + 1);
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+    
