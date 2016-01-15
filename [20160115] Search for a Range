@@ -1,0 +1,29 @@
+// http://www.lintcode.com/en/problem/search-for-a-range/
+
+        // write your code here
+        int[] res = new int[2];
+        res[0] = -1;
+        res[1] = -1;
+        if (A == null || A.length == 0) return res;
+        helper(A, target, 0, A.length - 1, res);
+        return res;
+    }
+    public void helper(int[] A, int target, int low, int hi, int[] res){
+        if (low > hi) return;
+        int mid = low + (hi - low) / 2;
+        if (A[mid] == target){
+            if (res[0] == -1 && res[1] == -1){
+                res[0] = mid;
+                res[1] = mid;
+            }
+            else if (mid < res[0])
+                res[0] = mid;
+            else if (mid > res[1]) res[1] = mid;
+            helper(A, target, low, mid - 1, res);
+            helper(A, target, mid + 1, hi, res);
+        }
+        else if (A[mid] > target) helper(A, target, low, mid - 1, res);
+        else helper(A, target, mid + 1, hi, res);
+        return;
+    }
+    
