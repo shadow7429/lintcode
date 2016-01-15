@@ -1,0 +1,28 @@
+// http://www.lintcode.com/en/problem/merge-sorted-array/
+
+/*
+因为如果从前向后进行插入的话，会造成对item的向后移动，而且我们知道A后面有多余的空位可以
+放下至少m + n个数字，所以我们采用从后向前进行merge的方法，这样子的好处是不用移动数据。
+*/
+    public void mergeSortedArray(int[] A, int m, int[] B, int n) {
+        // write your code here
+        int indexA = m - 1;
+        int indexB = n - 1;
+        int i = m + n - 1;
+        while (indexA >= 0 && indexB >= 0){
+            if (A[indexA] >= B[indexB]){
+                A[i] = A[indexA];
+                indexA--;
+                i--;
+            }
+            else {
+                A[i] = B[indexB];
+                indexB--;
+                i--;
+            }
+        }
+        while (indexB >= 0){
+            A[i--] = B[indexB--];
+        }
+        return;
+    }
