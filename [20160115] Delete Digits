@@ -1,0 +1,25 @@
+// http://www.lintcode.com/en/problem/delete-digits/#
+
+/*
+最外层循环控制着删数字的个数，内部循环每一次都从string的第一个字符开始。
+如果charAt(j + 1) < charAt(j)的话，肯定是要删除j位置的数字的，因为比如说321456
+看第一个字符 2 < 3如果我们不删除3的话，3在2前面，那么就算后面的都是0，也比以2
+开头的数字大，所以一定要删除前面比较大的。（记住一个小的数字后面就算跟着全部都是9也
+比一个大的数字后面跟着全部都是0小）。但是要注意，可能比如我们最后是要留住3个字符，
+如果首字符为0，那么0肯定是不会被删去的，因为后面的数字都肯定大于等于0，所以前面的0
+永远都会保留下来，所以这个时候我们要对结果进行调整，把前面的0去掉，因为024实际上就
+等于24.
+*/
+    public String DeleteDigits(String A, int k) {
+        // write your code here
+        for (int i = 0; i < k; i++){
+            for (int j = 0; j < A.length(); j++){
+                if (j == A.length() - 1 || A.charAt(j + 1) < A.charAt(j)){
+                    A = A.substring(0, j) + A.substring(j + 1);
+                    break;
+                }
+            }
+        }
+        while (A.charAt(0) == '0') A = A.substring(1);
+        return A;
+    }
