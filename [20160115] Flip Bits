@@ -1,0 +1,19 @@
+// http://www.lintcode.com/en/problem/flip-bits/#
+
+/*
+求关于数字的二进制位串的各种问题时候，第一反应是将这个数字先化为二进制位串。这里面也一样，
+但是我们要操作的是两个数字a和b，他们不同的位置有多少个。所以我们只要求两个数字的异或即可。
+然后因为两个数字都是32bit的，所以异或的结果也是32bit所以再用一个循环，查看每一个位置是否
+为1，即可得出结果。
+*/
+
+    public static int bitSwapRequired(int a, int b) {
+        // write your code here
+        int bit = a ^ b;
+        int res = 0;
+        for (int i = 32; i > 0; i--){
+            if ((bit & 1) == 1) res++;
+            bit >>= 1;
+        }
+        return res;
+    }
