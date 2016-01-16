@@ -1,0 +1,17 @@
+// http://www.lintcode.com/en/problem/trailing-zeros/
+
+/*
+这道题因为能导致trailing zero的就是2 * 5，所以我们就依次的看有几个5，几个25.。。
+另外这里面不考虑2的原因是因为阶乘是一系列连续的数字乘，所以肯定是有偶数的，有偶数
+就一定有2。
+*/
+    public long trailingZeros(long n) {
+        // write your code here
+        long count = 0;
+        long d = 5;
+        while (d <= n){
+            count = count + (n / d);
+            d = d * 5;
+        }
+        return count;
+    }
